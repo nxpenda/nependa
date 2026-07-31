@@ -91,13 +91,17 @@
     const now = Date.now();
     const lastVisit = localStorage.getItem('nependa_v_ts');
 
-    // Only count if first visit or if 30+ minutes passed since last visit
     if (!lastVisit || (now - parseInt(lastVisit, 10)) > TIMEOUT_MS) {
-      localStorage.setItem('nependa_v_ts', now);
-      
-      fetch('https://nependa-counter.ahl9081120.workers.dev', {
+      fetch('https://nependa-counter.ah19081120.workers.dev', {
         method: 'POST'
-      }).catch(() => {});
+      })
+      .then(res => {
+        if (res.ok) {
+          // Only save the 30-min timer if the server successfully logged it
+          localStorage.setItem('nependa_v_ts', now);
+        }
+      })
+      .catch(() => {});
     }
   })();
 </script>

@@ -81,9 +81,22 @@
     <li>cor favorita: o conceito de cor favorita varia para cada individuo e na minha opiniao nao existe uma cor ideal muito pelo contrario eu odeio cores pois elas representam objetos materiais diferentes nao ha exatamente uma cor melhor que a outra a vida seria bem mais simples e ideal se cores nao existissem</li>
   </ul>
 
+<br>
 
-<script data-goatcounter="https://nependa.goatcounter.com/count"
-        async src="//gc.zgo.at/count.js"></script>
+
+<p>visitas: <span id="visits">...</span></p>
+
+<script>
+  fetch('https://api.counterapi.dev/v1/nependa.online/visits/up')
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById('visits').innerText = data.count;
+    })
+    .catch(err => {
+      console.error('Counter error:', err);
+    });
+</script>
+                  
 
 </body>
 </html>

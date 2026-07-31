@@ -103,7 +103,7 @@
     
     const lastVisit = localStorage.getItem(lastVisitKey);
     const now = Date.now();
-    const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
+    const TWENTY_FOUR_HOURS = 1 * 60 * 60 * 1000;
     const isNewVisitor = !lastVisit || (now - parseInt(lastVisit)) > TWENTY_FOUR_HOURS;
 
     // Show cached count immediately so the page doesn't flicker

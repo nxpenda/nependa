@@ -86,9 +86,6 @@
 
 
 
-
-
-
 <div class="visitor-box">
   visitas: <span id="visitor-count">1</span>
 </div>
@@ -97,54 +94,47 @@
   async function initVisitorCounter() {
     const countSpan = document.getElementById("visitor-count");
     
-    // Unique key for your domain
-    const siteKey = "nependa_online_v1";
+    // Your Upstash Redis credentials
+    const UPSTASH_REST_URL = "https://decent-dragon-102913.upstash.io";
+    const UPSTASH_REST_TOKEN = "gQAAAAAAAZIBAAIgcDE1NjdjMTdkYTA3ZjA0MDZkODVkNjQ0MjNiNzlmN2U0Mw"; // <--- Paste token here
+
     const lastVisitKey = "nependa_last_visit_time";
     const cachedCountKey = "nependa_cached_count";
     
     const lastVisit = localStorage.getItem(lastVisitKey);
     const now = Date.now();
     const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
-    
-    // Check if user is a new visitor or hasn't visited in 24 hours
     const isNewVisitor = !lastVisit || (now - parseInt(lastVisit)) > TWENTY_FOUR_HOURS;
 
-    // Use cached count immediately if available so page loads fast
+    // Show cached count immediately so the page doesn't flicker
     const localCache = localStorage.getItem(cachedCountKey);
     if (localCache) {
       countSpan.textContent = parseInt(localCache).toLocaleString();
     }
 
     try {
-      // Primary API endpoint (Zero ads, plain JSON)
-      let endpoint = `https://api.counterapi.dev/v1/${siteKey}/visitors`;
+      // Increments count for new visitors (+1), gets current count for repeat visits
+      const command = isNewVisitor ? "incr/nependa_visitors" : "get/nependa_visitors";
       
-      if (isNewVisitor) {
-        endpoint += "/up"; // Increment count by 1
-      }
-
-      let response = await fetch(endpoint);
-
-      // If the counter doesn't exist yet on the server, force-create it
-      if (response.status === 404) {
-        response = await fetch(`https://api.counterapi.dev/v1/${siteKey}/visitors/up`);
-      }
+      const response = await fetch(`${UPSTASH_REST_URL}/${command}`, {
+        headers: {
+          Authorization: `Bearer ${UPSTASH_REST_TOKEN}`
+        }
+      });
 
       if (response.ok) {
         const data = await response.json();
-        if (data && typeof data.count === "number") {
-          countSpan.textContent = data.count.toLocaleString();
-          localStorage.setItem(cachedCountKey, data.count.toString());
-          
-          if (isNewVisitor) {
-            localStorage.setItem(lastVisitKey, now.toString());
-          }
+        const currentCount = parseInt(data.result) || 1;
+        
+        countSpan.textContent = currentCount.toLocaleString();
+        localStorage.setItem(cachedCountKey, currentCount.toString());
+        
+        if (isNewVisitor) {
+          localStorage.setItem(lastVisitKey, now.toString());
         }
       }
     } catch (error) {
-      console.warn("Visitor counter API offline or blocked by browser extension:", error);
-      // Fallback: keep displaying cached count or default to 1 instead of showing error text
-      countSpan.textContent = localCache ? parseInt(localCache).toLocaleString() : "1";
+      console.warn("Counter load error:", error);
     }
   }
 

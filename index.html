@@ -90,18 +90,30 @@
 
   <!-- Script do Contador ajustado antes de fechar o body -->
   <script>
-    const namespace = 'nxpenda-nependa'; 
-    const key = 'pagina-inicial';
+const namespace = 'nxpenda-nependa'; 
+const key = 'pagina-inicial';
 
-    fetch(`https://api.counterapi.dev/v1/${namespace}/${key}/up`)
-      .then(response => response.json())
-      .then(data => {
-        document.getElementById('visit-count').innerText = data.count;
-      })
-      .catch(error => {
-        console.error('Erro ao carregar visitas:', error);
-        document.getElementById('visit-count').innerText = '1';
-      });
+// Verifica se o usuário já visitou o site
+const hasVisited = localStorage.getItem('visited');
+
+if (!hasVisited) {
+  // Se for a primeira vez: incrementa o contador (+1)
+  fetch(`https://api.counterapi.dev/v1/${namespace}/${key}/up`)
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById('visit-count').innerText = data.count;
+      localStorage.setItem('visited', 'true'); // Marca que já visitou
+    })
+    .catch(() => document.getElementById('visit-count').innerText = '1');
+} else {
+  // Se der F5: só busca o valor atual sem somar nada
+  fetch(`https://api.counterapi.dev/v1/${namespace}/${key}/`)
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById('visit-count').innerText = data.count;
+    })
+    .catch(() => document.getElementById('visit-count').innerText = '1');
+}
   </script>
 
 </body>

@@ -83,36 +83,11 @@
 
 <br>
 
-
-<p>visitas: <span id="visits">...</span></p>
-
-<script>
-  const updateCounter = async () => {
-    try {
-      // 1. Try incrementing the visit count
-      let res = await fetch('https://api.counterapi.dev/v1/nependa.online/visitas/up');
-      
-      // 2. If counter doesn't exist yet (404), create it
-      if (res.status === 404) {
-        res = await fetch('https://api.counterapi.dev/v1/nependa.online/visitas/set?count=1');
-      }
-
-      const data = await res.json();
-      if (data && data.count !== undefined) {
-        document.getElementById('visits').innerText = data.count;
-      } else {
-        document.getElementById('visits').innerText = '1';
-      }
-    } catch (err) {
-      console.error('Counter API error:', err);
-      // Fallback display if blocked by an extension/network error
-      document.getElementById('visits').innerText = '1';
-    }
-  };
-
-  updateCounter();
-</script>
-                  
+       <!-- hitwebcounter Code START -->
+<a href="https://www.hitwebcounter.com/age-calculator" target="_blank" rel="noopener" title="Count age days">
+<img src="https://www.hitwebcounter.com/counter/counter.php?page=21512675&amp;style=0024&amp;nbdigits=5&amp;type=page" alt="Count age days" decoding="async" style="border:0;max-width:100%;height:1.2rem;" />
+</a>
+<!-- hitwebcounter Code END -->           
 
 </body>
 </html>

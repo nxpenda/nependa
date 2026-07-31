@@ -55,12 +55,12 @@
     <li>★☆☆☆ <a href="https://www.youtube.com/watch?v=T9CbkHQg_ns" target="_blank" rel="noopener noreferrer">fabgodamn - jigsaw</a></li>
     <li>★★★★ <a href="https://www.youtube.com/watch?v=rjlQV5rmcrs" target="_blank" rel="noopener noreferrer">fennel - confess</a></li>
     <li>★★★★ <a href="https://www.youtube.com/watch?v=epUg1EJSelk" target="_blank" rel="noopener noreferrer">mapt0v - apathy</a></li>
-    <li>★★☆☆ <a href="https://www.youtube.com/watch?v=22oDL6EKf9k" target="_blank" rel="noopener noreferrer">mapt0v - фенибут 2.0</a></li>
+    <li>★★☆☆ <a href="https://www.youtube.com/watch?22oDL6EKf9k" target="_blank" rel="noopener noreferrer">mapt0v - фенибут 2.0</a></li>
     <li>★★★☆ <a href="https://www.youtube.com/watch?v=EzShkPfi6zk" target="_blank" rel="noopener noreferrer">murasame - апрель</a></li>
     <li>★★★☆ <a href="https://www.youtube.com/watch?v=U3iyZ70jjdU" target="_blank" rel="noopener noreferrer">murasame - вчерашний день</a></li>
     <li>★★★★ <a href="https://www.youtube.com/watch?v=Ce6gDovdvok" target="_blank" rel="noopener noreferrer">murasame - ремиссия</a></li>
     <li>★★☆☆ <a href="https://www.youtube.com/watch?v=5W91oC4_5OM" target="_blank" rel="noopener noreferrer">ninevicious - project4play/svj</a></li>
-	<li>★☆☆☆ <a href="https://www.youtube.com/watch?v=QwJtVMg7mqM" target="_blank" rel="noopener noreferrer">ninevicious - vivienne westwood/rip</a></li>
+    <li>★☆☆☆ <a href="https://www.youtube.com/watch?v=QwJtVMg7mqM" target="_blank" rel="noopener noreferrer">ninevicious - vivienne westwood/rip</a></li>
     <li>★★☆☆ <a href="https://www.youtube.com/watch?v=eyLo4IysUMA" target="_blank" rel="noopener noreferrer">rekover jet - over u</a></li>
     <li>★★★★ <a href="https://www.youtube.com/watch?v=zk62uUqcNyo" target="_blank" rel="noopener noreferrer">system of a down - aerials</a></li>
     <li>★★★☆ <a href="https://youtu.be/pjX3J9EpAr0" target="_blank" rel="noopener noreferrer">the plot in you - feel nothing</a></li>
@@ -82,66 +82,56 @@
     <li>cor favorita: o conceito de cor favorita varia para cada individuo e na minha opiniao nao existe uma cor ideal muito pelo contrario eu odeio cores pois elas representam objetos materiais diferentes nao ha exatamente uma cor melhor que a outra a vida seria bem mais simples e ideal se cores nao existissem</li>
   </ul>
 
-<br>
+  <br>
 
+  <div class="visitor-box">
+    visitas: <span id="visitor-count">1</span>
+  </div>
 
-
-
-<div class="visitor-box">
-  visitas: <span id="visitor-count">1</span>
-</div>
-
-<script>
-  async function initVisitorCounter() {
-    const countSpan = document.getElementById("visitor-count");
-    
-    // Your Upstash Redis credentials
-    const UPSTASH_REST_URL = "https://decent-dragon-102913.upstash.io";
-    const UPSTASH_REST_TOKEN = "gQAAAAAAAZIBAAIgcDE1NjdjMTdkYTA3ZjA0MDZkODVkNjQ0MjNiNzlmN2U0Mw"; // <--- Paste token here
-
-    const lastVisitKey = "nependa_last_visit_time";
-    const cachedCountKey = "nependa_cached_count";
-    
-    const lastVisit = localStorage.getItem(lastVisitKey);
-    const now = Date.now();
-    const TWENTY_FOUR_HOURS = 0.5 * 60 * 60 * 1000;
-    const isNewVisitor = !lastVisit || (now - parseInt(lastVisit)) > TWENTY_FOUR_HOURS;
-
-    // Show cached count immediately so the page doesn't flicker
-    const localCache = localStorage.getItem(cachedCountKey);
-    if (localCache) {
-      countSpan.textContent = parseInt(localCache).toLocaleString();
-    }
-
-    try {
-      // Increments count for new visitors (+1), gets current count for repeat visits
-      const command = isNewVisitor ? "incr/nependa_visitors" : "get/nependa_visitors";
+  <script>
+    async function initVisitorCounter() {
+      const countSpan = document.getElementById("visitor-count");
       
-      const response = await fetch(`${UPSTASH_REST_URL}/${command}`, {
-        headers: {
-          Authorization: `Bearer ${UPSTASH_REST_TOKEN}`
-        }
-      });
+      const WORKSPACE = "nependa-site";
+      const COUNTER_NAME = "visitors";
 
-      if (response.ok) {
-        const data = await response.json();
-        const currentCount = parseInt(data.result) || 1;
-        
-        countSpan.textContent = currentCount.toLocaleString();
-        localStorage.setItem(cachedCountKey, currentCount.toString());
-        
-        if (isNewVisitor) {
-          localStorage.setItem(lastVisitKey, now.toString());
-        }
+      const lastVisitKey = "nependa_last_visit_time";
+      const cachedCountKey = "nependa_cached_count";
+
+      const lastVisit = localStorage.getItem(lastVisitKey);
+      const now = Date.now();
+      const TWENTY_FOUR_HOURS = 30 * 60 * 1000; // Fixed to 24 hours
+      const isNewVisitor = !lastVisit || (now - parseInt(lastVisit)) > TWENTY_FOUR_HOURS;
+
+      // Show cached count immediately so the page doesn't flicker
+      const localCache = localStorage.getItem(cachedCountKey);
+      if (localCache) {
+        countSpan.textContent = parseInt(localCache).toLocaleString();
       }
-    } catch (error) {
-      console.warn("Counter load error:", error);
+
+      try {
+        // CounterAPI endpoint: 'up' increments, 'get' reads
+        const action = isNewVisitor ? "up" : "get";
+        const response = await fetch(`https://api.counterapi.dev/v1/${WORKSPACE}/${COUNTER_NAME}/${action}`);
+
+        if (response.ok) {
+          const data = await response.json();
+          const currentCount = data.count || 1;
+
+          countSpan.textContent = currentCount.toLocaleString();
+          localStorage.setItem(cachedCountKey, currentCount.toString());
+
+          if (isNewVisitor) {
+            localStorage.setItem(lastVisitKey, now.toString());
+          }
+        }
+      } catch (error) {
+        console.warn("Counter load error:", error);
+      }
     }
-  }
 
-  document.addEventListener("DOMContentLoaded", initVisitorCounter);
-</script>
-
+    document.addEventListener("DOMContentLoaded", initVisitorCounter);
+  </script>
 
 </body>
 </html>

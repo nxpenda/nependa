@@ -1,18 +1,34 @@
-// api/visitor-counter.js
 export default async function handler(req, res) {
-  const { isNew } = req.query;
-  const command = isNew === "true" ? "incr/nependa_visitors" : "get/nependa_visitors";
+  const url = process.env.UPSTASH_REDIS_REST_URL;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
+
+  // Verify environment variables are present
+  if (!url || !token) {
+    return res.status(500).json({ 
+      error: "Upstash environment variables are missing on Vercel." 
+    });
+  }
 
   try {
-    const response = await fetch(`${process.env.UPSTASH_REDIS_REST_URL}/${command}`, {
+    // Remove trailing slash if present to prevent broken URLs
+    const baseUrl = url.replace(/\/$/, "");
+
+    // Increment key 'visits' using Upstash REST API
+    const response = await fetch(`${baseUrl}/incr/visits`, {
       headers: {
-        Authorization: `Bearer ${process.env.UPSTASH_REDIS_REST_TOKEN}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
     const data = await response.json();
-    return res.status(200).json(data);
-  } catch (error) {
-    return res.status(500).json({ error: "Failed to communicate with Upstash" });
+
+    if (data.error) {
+      return res.status(500).json({ error: data.error });
+    }
+
+    // Return the updated counter number
+    return res.status(200).json({ visits: data.result });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
   }
 }

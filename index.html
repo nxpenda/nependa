@@ -84,5 +84,55 @@
 <br>
 
 
+
+
+
+
+
+<div class="visitor-box">
+  visitas: <span id="visitor-count">...</span>
+</div>
+
+
+
+
+<script>
+  async function initVisitorCounter() {
+    // Unique namespace key for your website domain
+    const siteID = "nependa_online_visitors";
+    const lastVisitKey = "nependa_last_visit_timestamp";
+    
+    const lastVisit = localStorage.getItem(lastVisitKey);
+    const now = Date.now();
+    const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
+
+    // Base REST API endpoint (returns clean JSON, no ads or links)
+    let endpoint = `https://api.counterapi.dev/v1/${siteID}/visits`;
+
+    // Deduplication check: Only increment count if it's a new visitor or > 24 hrs since last visit
+    if (!lastVisit || (now - parseInt(lastVisit)) > TWENTY_FOUR_HOURS) {
+      endpoint += `/up`; // Triggers +1 count
+      localStorage.setItem(lastVisitKey, now.toString());
+    }
+
+    try {
+      const response = await fetch(endpoint);
+      const data = await response.json();
+
+      // Display the raw count number directly in your HTML text
+      if (data && data.count !== undefined) {
+        document.getElementById("visitor-count").textContent = data.count.toLocaleString();
+      }
+    } catch (error) {
+      console.error("Visitor counter error:", error);
+      document.getElementById("visitor-count").textContent = "Unavailable";
+    }
+  }
+
+  // Execute on page load
+  document.addEventListener("DOMContentLoaded", initVisitorCounter);
+</script>
+
+
 </body>
 </html>

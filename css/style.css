@@ -69,3 +69,19 @@
       height: 40px;
       filter: invert(0.9) hue-rotate(180deg); /* Dark mode style for the default player */
     }
+	
+.post-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 25px;
+  margin-bottom: 10px;
+}
+
+.post-title-row h2 {
+  margin: 0; /* Prevents heading height from pushing elements down */
+}
+
+.date {
+  font-weight: normal;
+}

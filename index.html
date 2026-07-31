@@ -90,46 +90,64 @@
 
 
 <div class="visitor-box">
-  visitas: <span id="visitor-count">...</span>
+  visitas: <span id="visitor-count">1</span>
 </div>
-
-
-
 
 <script>
   async function initVisitorCounter() {
-    // Unique namespace key for your website domain
-    const siteID = "nependa_online_visitors";
-    const lastVisitKey = "nependa_last_visit_timestamp";
+    const countSpan = document.getElementById("visitor-count");
+    
+    // Unique key for your domain
+    const siteKey = "nependa_online_v1";
+    const lastVisitKey = "nependa_last_visit_time";
+    const cachedCountKey = "nependa_cached_count";
     
     const lastVisit = localStorage.getItem(lastVisitKey);
     const now = Date.now();
     const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
+    
+    // Check if user is a new visitor or hasn't visited in 24 hours
+    const isNewVisitor = !lastVisit || (now - parseInt(lastVisit)) > TWENTY_FOUR_HOURS;
 
-    // Base REST API endpoint (returns clean JSON, no ads or links)
-    let endpoint = `https://api.counterapi.dev/v1/${siteID}/visits`;
-
-    // Deduplication check: Only increment count if it's a new visitor or > 24 hrs since last visit
-    if (!lastVisit || (now - parseInt(lastVisit)) > TWENTY_FOUR_HOURS) {
-      endpoint += `/up`; // Triggers +1 count
-      localStorage.setItem(lastVisitKey, now.toString());
+    // Use cached count immediately if available so page loads fast
+    const localCache = localStorage.getItem(cachedCountKey);
+    if (localCache) {
+      countSpan.textContent = parseInt(localCache).toLocaleString();
     }
 
     try {
-      const response = await fetch(endpoint);
-      const data = await response.json();
+      // Primary API endpoint (Zero ads, plain JSON)
+      let endpoint = `https://api.counterapi.dev/v1/${siteKey}/visitors`;
+      
+      if (isNewVisitor) {
+        endpoint += "/up"; // Increment count by 1
+      }
 
-      // Display the raw count number directly in your HTML text
-      if (data && data.count !== undefined) {
-        document.getElementById("visitor-count").textContent = data.count.toLocaleString();
+      let response = await fetch(endpoint);
+
+      // If the counter doesn't exist yet on the server, force-create it
+      if (response.status === 404) {
+        response = await fetch(`https://api.counterapi.dev/v1/${siteKey}/visitors/up`);
+      }
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data && typeof data.count === "number") {
+          countSpan.textContent = data.count.toLocaleString();
+          localStorage.setItem(cachedCountKey, data.count.toString());
+          
+          if (isNewVisitor) {
+            localStorage.setItem(lastVisitKey, now.toString());
+          }
+        }
       }
     } catch (error) {
-      console.error("Visitor counter error:", error);
-      document.getElementById("visitor-count").textContent = "Unavailable";
+      console.warn("Visitor counter API offline or blocked by browser extension:", error);
+      // Fallback: keep displaying cached count or default to 1 instead of showing error text
+      countSpan.textContent = localCache ? parseInt(localCache).toLocaleString() : "1";
     }
   }
 
-  // Execute on page load
   document.addEventListener("DOMContentLoaded", initVisitorCounter);
 </script>
 

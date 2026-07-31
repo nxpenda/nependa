@@ -84,54 +84,55 @@
 
   <br>
 
-  <div class="visitor-box">
-    visitas: <span id="visitor-count">1</span>
-  </div>
 
-  <script>
-    async function initVisitorCounter() {
-      const countSpan = document.getElementById("visitor-count");
-      
-      const WORKSPACE = "nependa-site";
-      const COUNTER_NAME = "visitors";
 
-      const lastVisitKey = "nependa_last_visit_time";
-      const cachedCountKey = "nependa_cached_count";
 
-      const lastVisit = localStorage.getItem(lastVisitKey);
-      const now = Date.now();
-      const TWENTY_FOUR_HOURS = 30 * 60 * 1000; // Fixed to 24 hours
-      const isNewVisitor = !lastVisit || (now - parseInt(lastVisit)) > TWENTY_FOUR_HOURS;
 
-      // Show cached count immediately so the page doesn't flicker
-      const localCache = localStorage.getItem(cachedCountKey);
-      if (localCache) {
-        countSpan.textContent = parseInt(localCache).toLocaleString();
-      }
 
-      try {
-        // CounterAPI endpoint: 'up' increments, 'get' reads
-        const action = isNewVisitor ? "up" : "get";
-        const response = await fetch(`https://api.counterapi.dev/v1/${WORKSPACE}/${COUNTER_NAME}/${action}`);
+<div class="visitor-box">
+  visitas: <span id="visitor-count">1</span>
+</div>
 
-        if (response.ok) {
-          const data = await response.json();
-          const currentCount = data.count || 1;
+<script>
+  async function initVisitorCounter() {
+    const countSpan = document.getElementById("visitor-count");
 
-          countSpan.textContent = currentCount.toLocaleString();
-          localStorage.setItem(cachedCountKey, currentCount.toString());
+    const lastVisitKey = "nependa_last_visit_time";
+    const cachedCountKey = "nependa_cached_count";
 
-          if (isNewVisitor) {
-            localStorage.setItem(lastVisitKey, now.toString());
-          }
-        }
-      } catch (error) {
-        console.warn("Counter load error:", error);
-      }
+    const lastVisit = localStorage.getItem(lastVisitKey);
+    const now = Date.now();
+    const THIRTY_MINUTES = 30 * 60 * 1000;
+    const isNewVisitor = !lastVisit || (now - parseInt(lastVisit)) > THIRTY_MINUTES;
+
+    // Show cached count immediately
+    const localCache = localStorage.getItem(cachedCountKey);
+    if (localCache) {
+      countSpan.textContent = parseInt(localCache).toLocaleString();
     }
 
-    document.addEventListener("DOMContentLoaded", initVisitorCounter);
-  </script>
+    try {
+      // Calls your Vercel serverless function (first-party request, bypasses Brave Shields)
+      const response = await fetch(`/api/visitor-counter?isNew=${isNewVisitor}`);
+
+      if (response.ok) {
+        const data = await response.json();
+        const currentCount = parseInt(data.result) || 1;
+
+        countSpan.textContent = currentCount.toLocaleString();
+        localStorage.setItem(cachedCountKey, currentCount.toString());
+
+        if (isNewVisitor) {
+          localStorage.setItem(lastVisitKey, now.toString());
+        }
+      }
+    } catch (error) {
+      console.warn("Counter load error:", error);
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", initVisitorCounter);
+</script>
 
 </body>
 </html>

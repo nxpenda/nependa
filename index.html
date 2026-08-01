@@ -92,7 +92,7 @@
     const lastVisit = localStorage.getItem('nependa_v_ts');
 
     if (!lastVisit || (now - parseInt(lastVisit, 10)) > TIMEOUT_MS) {
-      fetch('https://nependa-counter.ah19081120.workers.dev', {
+      fetch('https://nependa-counter.nependa.workers.dev', {
         method: 'POST'
       })
       .then(res => {

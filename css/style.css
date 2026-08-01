@@ -1,7 +1,7 @@
 
     body {
       background-color: #000000;
-      color: #d1d1d1;
+      color: #C4C4C4;
       font-family: 'Roboto Mono', monospace;
       max-width: 8000px;
       margin: 10px auto;
@@ -9,7 +9,7 @@
       line-height: 1.4;
     }
     a {
-      color: #f1f1f1;
+      color: #E0E0E0;
       text-decoration: none;
 //      font-weight: bold;
     }
@@ -41,6 +41,7 @@
       margin-bottom: 10px;
     }
     h2 {
+	  color: #EDEDED;
       font-size: 1.2rem;
       font-weight: bold;
       margin-top: 25px;

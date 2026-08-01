@@ -87,6 +87,12 @@
 
 <script>
   (function () {
+    // 1. Skip counting completely if you've flagged yourself
+    if (localStorage.getItem('myself') === '1') {
+      console.log('Admin visit detected. Skipping counter.');
+      return;
+    }
+
     const TIMEOUT_MS = 30 * 60 * 1000; // 30 minutes
     const now = Date.now();
     const lastVisit = localStorage.getItem('nependa_v_ts');

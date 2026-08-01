@@ -91,13 +91,21 @@
     const now = Date.now();
     const lastVisit = localStorage.getItem('nependa_v_ts');
 
+    // Get or generate a persistent Unique Visitor ID for this browser
+    let visitorId = localStorage.getItem('nependa_u_id');
+    if (!visitorId) {
+      visitorId = crypto.randomUUID();
+      localStorage.setItem('nependa_u_id', visitorId);
+    }
+
     if (!lastVisit || (now - parseInt(lastVisit, 10)) > TIMEOUT_MS) {
       fetch('https://nependa-counter.nependa.workers.dev', {
-        method: 'POST'
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ visitorId: visitorId })
       })
       .then(res => {
         if (res.ok) {
-          // Only save the 30-min timer if the server successfully logged it
           localStorage.setItem('nependa_v_ts', now);
         }
       })

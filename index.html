@@ -99,24 +99,24 @@
 
 <script>
   (function () {
-    // 1. Skip counting completely if you've flagged yourself
-    if (localStorage.getItem('myself') === '1') {
-      console.log('Admin visit detected. Skipping counter.');
+    // nependa
+    if (localStorage.getItem('eu') === '1') {
+      console.log('nependa');
       return;
     }
 
-    const TIMEOUT_MS = 10 * 60 * 1000; // 30 minutes
-    const now = Date.now();
-    const lastVisit = localStorage.getItem('nependa_v_ts');
+    const TIMEOUT = 10 * 60 * 1000; // 10 minutos
+    const agora = Date.now();
+    const ultimavisita = localStorage.getItem('nependa_v_ts');
 
-    // Get or generate a persistent Unique Visitor ID for this browser
+    // visita unica
     let visitorId = localStorage.getItem('nependa_u_id');
     if (!visitorId) {
       visitorId = crypto.randomUUID();
       localStorage.setItem('nependa_u_id', visitorId);
     }
 
-    if (!lastVisit || (now - parseInt(lastVisit, 10)) > TIMEOUT_MS) {
+    if (!ultimavisita || (agora - parseInt(ultimavisita, 10)) > TIMEOUT) {
       fetch('https://nependa-counter.nependa.workers.dev', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -124,7 +124,7 @@
       })
       .then(res => {
         if (res.ok) {
-          localStorage.setItem('nependa_v_ts', now);
+          localStorage.setItem('nependa_v_ts', agora);
         }
       })
       .catch(() => {});

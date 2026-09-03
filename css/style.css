@@ -10,7 +10,7 @@
     a {
       color: #E0E0E0;
       text-decoration: none;
-//      font-weight: bold;
+      font-size: 1.1rem;
     }
     a:hover {
       opacity: 0.8;
@@ -18,9 +18,6 @@
     .header-nav a {
       text-decoration: none;
     }
-//    .header-nav a:hover {
-//      text-decoration: underline;
-//    }
     .header {
       margin-bottom: 20px;
     }
@@ -38,10 +35,11 @@
 	p {
       margin-top: 0px;
       margin-bottom: 10px;
+      font-size: 1.1rem;
     }
     h2 {
 	  color: #EDEDED;
-      font-size: 1.2rem;
+      font-size: 1.4rem;
       font-weight: bold;
       margin-top: 25px;
       margin-bottom: 10px;
@@ -50,6 +48,7 @@
       list-style-type: none;
       padding-left: 0;
       margin: 0;
+      font-size: 1.1rem;
     }
     li {
       margin-bottom: 0px;
@@ -63,7 +62,6 @@
 	  font-weight: bold;
     }
     audio {
-//      margin-top: 10px;
       width: 100%;
       max-width: 400px;
       height: 40px;

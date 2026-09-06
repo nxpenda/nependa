@@ -1,0 +1,85 @@
+
+    body {
+      background-color: #000000;
+      color: #C4C4C4;
+      font-family: 'Roboto Mono', monospace;
+      margin: 10px auto;
+      padding: 0 19px;
+      line-height: 1.4;
+    }
+    a {
+      color: #E0E0E0;
+      text-decoration: none;
+      font-size: 1.1rem;
+    }
+    a:hover {
+      opacity: 0.8;
+    }
+    .header-nav a {
+      text-decoration: none;
+    }
+    .header {
+      margin-bottom: 20px;
+    }
+    .header-nav {
+      margin-bottom: 6px;
+    }
+    .active {
+      font-weight: bold;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #d1d1d1;
+      margin: 0;
+    }
+	p {
+      margin-top: 0px;
+      margin-bottom: 10px;
+      font-size: 1.1rem;
+    }
+    h2 {
+	  color: #EDEDED;
+      font-size: 1.4rem;
+      font-weight: bold;
+      margin-top: 25px;
+      margin-bottom: 10px;
+    }
+    ul {
+      list-style-type: none;
+      padding-left: 0;
+      margin: 0;
+      font-size: 1.1rem;
+    }
+    li {
+      margin-bottom: 0px;
+    }
+    .date {
+      margin-bottom: 20px;
+    }
+    .socials {
+      margin-bottom: 0px;
+	  margin-top: 30px;
+	  font-weight: bold;
+    }
+    audio {
+      width: 100%;
+      max-width: 400px;
+      height: 40px;
+      filter: invert(0.9) hue-rotate(180deg); /* Dark mode style for the default player */
+    }
+	
+.post-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 25px;
+  margin-bottom: 10px;
+}
+
+.post-title-row h2 {
+  margin: 0; /* Prevents heading height from pushing elements down */
+}
+
+.date {
+  font-weight: normal;
+}

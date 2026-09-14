@@ -10,7 +10,7 @@
     a {
       color: #E0E0E0;
       text-decoration: none;
-      font-size: 1.1rem;
+      font-size: 1rem;
     }
     a:hover {
       opacity: 0.8;
@@ -35,11 +35,11 @@
 	p {
       margin-top: 0px;
       margin-bottom: 10px;
-      font-size: 1.1rem;
+      font-size: 1rem;
     }
     h2 {
 	  color: #EDEDED;
-      font-size: 1.4rem;
+      font-size: 1.2rem;
       font-weight: bold;
       margin-top: 25px;
       margin-bottom: 10px;
@@ -48,7 +48,7 @@
       list-style-type: none;
       padding-left: 0;
       margin: 0;
-      font-size: 1.1rem;
+      font-size: 1rem;
     }
     li {
       margin-bottom: 0px;

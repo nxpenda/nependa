@@ -42,13 +42,16 @@
 	<p>ezzodi, claw, gabriel, hn, zuffy, kily, dealfness, katu</p>
 
 	<h2>musica favorita atualmente</h2>
-	<p><a href="https://www.youtube.com/watch?v=j1G6yIZhJ78" target="_blank" rel="noopener noreferrer">dance gavin dance - open your eyes and look north</a></p>
+	<p>→ <a href="https://www.youtube.com/watch?v=j1G6yIZhJ78" target="_blank" rel="noopener noreferrer">dance gavin dance - open your eyes and look north</a></p>
 
+	<!--
 	<audio id="musica" controls src="assets/audio/musica.mp3"></audio>
 	<script>
 		const player = document.getElementById('musica');
 		player.volume = 0.1;
 	</script>
+	--!>
+
 
 	<h2>musicas em rotacao</h2>
 	<ul>
@@ -107,7 +110,7 @@
 		<li>quatro amigos que nao sao do claning - 2026</li>
 		<li>um amigo da escola - nao lembro quando foi</li>
 		<li>gabriel legal - 28/6/2026</li>
-		<li>coldlogic - julho/2026</li>
+		<li>scz - julho/2026</li>
 		<li>dealfness - comeco de agosto/2026</li>
 		<li>claw - 15/8/2026</li>
 		<li>zuffy - 19/8/2026</li>
@@ -122,26 +125,23 @@
 		<li><a href="https://drive.google.com/file/d/1sIT5iz9z_H48PgjLfXbEQcIlIEC5aSyj/view?usp=sharing" target="_blank" rel="noopener noreferrer">nependa 1.zip</a></li>
 	</ul>
 
-
 	<br>
-	<p>pagina atualizada em 30/09/2026 as 19:49</p>
+	<p>pagina atualizada em 09/10/2026 as 21:58</p>
 
   
   
 
 <script>
   (function () {
-    // nependa
     if (localStorage.getItem('eu') === '1') {
       console.log('nependa');
       return;
     }
 
-    const TIMEOUT = 10 * 60 * 1000; // 10 minutos
+    const TIMEOUT = 10 * 60 * 1000;
     const agora = Date.now();
     const ultimavisita = localStorage.getItem('nependa_v_ts');
 
-    // visita unica
     let visitorId = localStorage.getItem('nependa_u_id');
     if (!visitorId) {
       visitorId = crypto.randomUUID();
